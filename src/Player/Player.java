@@ -15,12 +15,14 @@ public abstract class Player {
     public int dy;
     public boolean jump;
     public int count;
+    public boolean hitEnemy;
 
     public Player(){
         x=0;
         y=600;
         dx = 0;
         dy = 0;
-        jump=false;
+        jump = false;
+        hitEnemy = false;
     }
 }

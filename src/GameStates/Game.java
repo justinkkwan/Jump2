@@ -99,6 +99,8 @@ public class Game extends JPanel implements ActionListener{
         if(jumping){
             mar.y +=mar.dy;
             mar.count++;
+            if(!keys[0]&&mar.dy<0&&!mar.hitEnemy)
+                mar.dy=0;
             if(gravity==0) {
                 mar.dy++;
             }
@@ -126,6 +128,7 @@ public class Game extends JPanel implements ActionListener{
                         mar.y - gom.y>-100 &&
                         mar.dy > 0) {
                     gom.onHit();
+                    mar.hitEnemy=true;
                     mar.dy=-5;
                     if(keys[0]){
                         mar.dy=-12;
@@ -142,7 +145,10 @@ public class Game extends JPanel implements ActionListener{
                 }
             }
             else gom.count++;
-            if (gom.count>40) removeList.add(gom);
+            if (gom.count>40){
+                removeList.add(gom);
+                mar.hitEnemy=false;
+            }
         }
         for(Goomba gom: removeList){
             goombas.remove(gom);
