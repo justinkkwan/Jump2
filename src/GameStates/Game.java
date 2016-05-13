@@ -4,16 +4,13 @@ import Enemies.Goomba;
 import Player.Player;
 import Player.Mario;
 import Player.Luigi;
+import Sounds.SoundPlayer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.beans.PropertyChangeListener;
 import java.util.LinkedList;
-import java.util.Random;
 
 /**
  * Created by Justin Kwan on 4/12/2016.
@@ -21,6 +18,8 @@ import java.util.Random;
 public class Game extends JPanel implements ActionListener{
 
     //private Action leftPress = new leftAction();
+
+    private SoundPlayer sp = new SoundPlayer();
 
     private LinkedList<Goomba> goombas = new LinkedList<Goomba>();
     private LinkedList<Goomba> removeList = new LinkedList<Goomba>();
@@ -95,6 +94,7 @@ public class Game extends JPanel implements ActionListener{
         if(keys[0]&&!jumping){
             mar.dy=-12;
             jumping = true;
+            sp.playSound(0);
         }
         if(jumping){
             mar.y +=mar.dy;
@@ -127,7 +127,12 @@ public class Game extends JPanel implements ActionListener{
                         mar.dy > 0) {
                     gom.onHit();
                     mar.dy=-5;
-                    if(keys[0]) mar.dy=-12;
+                    if(keys[0]){
+                        mar.dy=-12;
+                        sp.playSound(2);
+                    }
+                    else
+                        sp.playSound(1);
                     jumping=true;
                 }
 
@@ -175,6 +180,7 @@ public class Game extends JPanel implements ActionListener{
             if(s.equals("up")){
                 if(!jumping)
                     up = true;
+
             }
             if(s.equals("down"))
                 up = false;
