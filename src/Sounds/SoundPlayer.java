@@ -13,6 +13,7 @@ public class SoundPlayer {
     public static Clip jump;
     public static Clip stomp;
     public static Clip stompjump;
+    public static Clip gameOver;
 
 //
 //    static File JumpSound;
@@ -69,6 +70,11 @@ public class SoundPlayer {
             url = getClass().getResource("NSMBWiiSoundEffectsRip/nsmbwiiStomp2.wav");
             ais = AudioSystem.getAudioInputStream(url);
             stompjump.open(ais);
+
+            gameOver = (Clip) mixer.getLine(dataLineInfo);
+            url = getClass().getResource("NSMBWiiSoundEffectsRip/nsmbwiiDeath.wav");
+            ais = AudioSystem.getAudioInputStream(url);
+            gameOver.open(ais);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -91,6 +97,9 @@ public class SoundPlayer {
                 stompjump.stop();
                 stompjump.start();
                 stompjump.setMicrosecondPosition(0);
+                break;
+            case 3:
+                gameOver.start();
                 break;
             default:
                 break;

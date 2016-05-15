@@ -21,7 +21,7 @@ public class Goomba {
     public Goomba(){
         state = 1;
         x = 400;
-        y = 400;
+        y = 600;
 
         dx=-2;
     }

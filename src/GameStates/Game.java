@@ -19,35 +19,56 @@ public class Game extends JPanel implements ActionListener{
 
     //private Action leftPress = new leftAction();
 
+    private JLabel scoreLabel = new JLabel("0");
+    private int score =0;
+
     private SoundPlayer sp = new SoundPlayer();
 
     private LinkedList<Goomba> goombas = new LinkedList<Goomba>();
     private LinkedList<Goomba> removeList = new LinkedList<Goomba>();
-    private Player mar = new Mario();
+    private Player player = new Mario();
     private static int dx = 4;
     private int gravity = 0;
 
-    private Timer timer = new Timer(5, this);
+    private Timer timer = new Timer(6, this);
     private boolean jumping = false;
     public boolean[] keys = new boolean[10]; //{W A S D (if A and D both pressed) ...}
+
+
 
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
 
-        ImageIcon playerIMG = mar.activePicture;
-        playerIMG.paintIcon(this, g, mar.x, mar.y);
+        ImageIcon playerIMG = player.activePicture;
+        playerIMG.paintIcon(this, g, player.getx(), player.gety());
 
         for(Goomba gom: goombas){
             ImageIcon enemyIMG = gom.getPicture();
             enemyIMG.paintIcon(this, g, gom.x, gom.y);
         }
+
+        int numZeros = 10 - Integer.toString(score).length();
+        String front = "";
+        while(numZeros>0){
+            front+="0";
+            numZeros--;
+        }
+
+        scoreLabel.setText(front + Integer.toString(score));
+
     }
 
     public void main(){
-//        mar = new Mario();
+//        player = new Mario();
+
+        scoreLabel.setFont(new Font(scoreLabel.getFont().getName(), Font.PLAIN, 40));
+        scoreLabel.setPreferredSize(new Dimension(1150,50));
+        scoreLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        this.add(scoreLabel);
+
         goombas.add(new Goomba());
-        goombas.add(new Goomba(200,600));
+        goombas.add(new Goomba(600,600));
         timer.start();
 
 //        setFocusable(true);
@@ -71,44 +92,46 @@ public class Game extends JPanel implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(keys[1]){
-            mar.x -= dx;
-            mar.activePicture = mar.pictureLeft;
+            player.setdx(-1*dx);
+            player.activePicture = player.pictureLeft;
 
         }
         if(keys[3]){
-            mar.x += dx;
-            mar.activePicture = mar.pictureRight;
+            player.setdx(dx);
+            player.activePicture = player.pictureRight;
         }
         if(keys[1]&&keys[3]){
             if(keys[4]){
-                mar.x += dx;
-                mar.activePicture = mar.pictureRight;
+                player.setdx(dx);
+                player.activePicture = player.pictureRight;
             }
             else{
-                mar.x -= dx;
-                mar.activePicture = mar.pictureLeft;
+                player.setdx(-1*dx);
+                player.activePicture = player.pictureLeft;
             }
         }
+        if(!keys[1]&&!keys[3]) player.setdx(0);
+        player.incrementx();
 
 
         if(keys[0]&&!jumping){
-            mar.dy=-12;
+            player.setdy(-12);
             jumping = true;
             sp.playSound(0);
         }
         if(jumping){
-            mar.y +=mar.dy;
-            mar.count++;
-            if(!keys[0]&&mar.dy<0&&!mar.hitEnemy)
-                mar.dy=0;
+            player.incrementy();
+            player.count++;
+            if(!keys[0]&&player.getdy()<0&&!player.hitEnemy)
+                player.setdy(0);
             if(gravity==0) {
-                mar.dy++;
+                player.gravityEffect();
             }
         }
-        if(mar.y>=600){
+        if(player.gety()>=600){
             jumping=false;
-            mar.y = 600;
-            mar.dy=0;
+            player.sety(600);
+            player.setdy(0);
         }
 
         for(Goomba gom: goombas){
@@ -123,20 +146,28 @@ public class Game extends JPanel implements ActionListener{
                         gom.dy=-8;
                     }
                 }
-                if (gom.x < 0 || gom.x > 1050) gom.dx = -gom.dx;
-                if ((gom.x - mar.x < 96 && mar.x - gom.x < 92) &&
-                        mar.y - gom.y>-100 &&
-                        mar.dy > 0) {
-                    gom.onHit();
-                    mar.hitEnemy=true;
-                    mar.dy=-5;
-                    if(keys[0]){
-                        mar.dy=-12;
-                        sp.playSound(2);
+                if (gom.x < 0 || gom.x > 1080) gom.dx = -gom.dx;
+                if ((gom.x - player.getx() < player.activePicture.getIconWidth()-5 && //goomba and mario can be within 4 pixels of each other on left of goomba
+                        player.getx() - gom.x < gom.getPicture().getIconWidth()-8) && //goomba and mario can be within 7 pixels of each other on right of goomba
+                        gom.y - player.gety() < player.activePicture.getIconHeight()) {
+                    if(player.getdy() > 0){
+                        gom.onHit();
+                        player.hitEnemy=true;
+                        player.setdy(-5);
+                        if(keys[0]){
+                            player.setdy(-12);
+                            sp.playSound(2);
+                        }
+                        else
+                            sp.playSound(1);
+                        player.incrementy();
+                        jumping=true;
+                        score+=200;
                     }
-                    else
-                        sp.playSound(1);
-                    jumping=true;
+                    else if (gom.y - player.gety() < player.activePicture.getIconHeight() - gom.getPicture().getIconHeight()/2){
+                        // this allows players to hit a goomba diagonally and not be punished for it (within reason)
+                        gameOver();
+                    }
                 }
 
                 if(gom.state==1&&gom.y<600){
@@ -147,7 +178,7 @@ public class Game extends JPanel implements ActionListener{
             else gom.count++;
             if (gom.count>40){
                 removeList.add(gom);
-                mar.hitEnemy=false;
+                player.hitEnemy=false;
             }
         }
         for(Goomba gom: removeList){
@@ -157,7 +188,7 @@ public class Game extends JPanel implements ActionListener{
 
 
         if(goombas.size()<2){
-            goombas.add(new Goomba(1049,600));
+            goombas.add(new Goomba(1079,600));
         }
 
         gravity=(gravity+1)%4;
@@ -167,13 +198,13 @@ public class Game extends JPanel implements ActionListener{
     public void setCharacter(int character) {
         switch (character){
             case 1:
-                mar = new Mario();
+                player = new Mario();
                 break;
             case 2:
-                mar = new Luigi();
+                player = new Luigi();
                 break;
             default:
-                mar = new Mario();
+                player = new Mario();
                 break;
         }
     }
@@ -221,5 +252,10 @@ public class Game extends JPanel implements ActionListener{
             keys[3] = b;
             keys[4] = true;
         }
+    }
+
+    public void gameOver(){
+        sp.playSound(3);
+        timer.stop();
     }
 }
