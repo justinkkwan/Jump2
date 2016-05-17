@@ -99,6 +99,7 @@ public class SoundPlayer {
                 stompjump.setMicrosecondPosition(0);
                 break;
             case 3:
+                gameOver.setMicrosecondPosition(0);
                 gameOver.start();
                 break;
             default:

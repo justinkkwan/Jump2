@@ -35,11 +35,15 @@ public class Game extends JPanel implements ActionListener{
     private boolean jumping = false;
     public boolean[] keys = new boolean[10]; //{W A S D (if A and D both pressed) R...}
 
-
+    public ImageIcon SkyImage = new ImageIcon(getClass().getResource("res/sky.png"));
+    public ImageIcon GroundImage = new ImageIcon(getClass().getResource("res/ground.png"));
 
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
+
+        SkyImage.paintIcon(this, g, 0, 0);
+        GroundImage.paintIcon(this, g, 0, 700);
 
         ImageIcon playerIMG = player.activePicture;
         playerIMG.paintIcon(this, g, player.getx(), player.gety());
@@ -63,7 +67,7 @@ public class Game extends JPanel implements ActionListener{
     public void main(){
         player = new Mario();
 
-        scoreLabel.setFont(new Font(scoreLabel.getFont().getName(), Font.PLAIN, 40));
+        scoreLabel.setFont(new Font(scoreLabel.getFont().getName(), Font.BOLD, 40));
         scoreLabel.setPreferredSize(new Dimension(1150,50));
         scoreLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         this.add(scoreLabel);
