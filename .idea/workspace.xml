@@ -6,11 +6,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="23942769-cbff-441a-9611-5a2cd8833312" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Jump2/GameStates/Game.class" afterPath="$PROJECT_DIR$/out/production/Jump2/GameStates/Game.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GameStates/Game.java" afterPath="$PROJECT_DIR$/src/GameStates/Game.java" />
-    </list>
+    <list default="true" id="23942769-cbff-441a-9611-5a2cd8833312" name="Default" comment="" />
     <ignored path="Jump2.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -561,7 +557,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="279" y="120" width="1245" height="866" extended-state="1" />
+    <frame x="279" y="120" width="1245" height="866" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
