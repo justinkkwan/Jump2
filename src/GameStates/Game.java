@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
 import java.util.LinkedList;
 
 /**
@@ -32,7 +33,7 @@ public class Game extends JPanel implements ActionListener{
 
     private Timer timer = new Timer(6, this);
     private boolean jumping = false;
-    public boolean[] keys = new boolean[10]; //{W A S D (if A and D both pressed) ...}
+    public boolean[] keys = new boolean[10]; //{W A S D (if A and D both pressed) R...}
 
 
 
@@ -60,7 +61,7 @@ public class Game extends JPanel implements ActionListener{
     }
 
     public void main(){
-//        player = new Mario();
+        player = new Mario();
 
         scoreLabel.setFont(new Font(scoreLabel.getFont().getName(), Font.PLAIN, 40));
         scoreLabel.setPreferredSize(new Dimension(1150,50));
@@ -87,6 +88,9 @@ public class Game extends JPanel implements ActionListener{
         this.getActionMap().put("releasedUp", new UpAction("down"));
         this.getActionMap().put("releasedL", new leftAction(false));
         this.getActionMap().put("releasedR", new rightAction(false));
+
+        this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("R"), "restart");
+        this.getActionMap().put("restart", new restart());
     }
 
     @Override
@@ -257,5 +261,17 @@ public class Game extends JPanel implements ActionListener{
     public void gameOver(){
         sp.playSound(3);
         timer.stop();
+
+
+    }
+
+    private class restart extends AbstractAction {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            remove(scoreLabel);
+            goombas.clear();
+            score=0;
+            main();
+        }
     }
 }
