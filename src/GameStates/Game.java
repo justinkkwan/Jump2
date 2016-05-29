@@ -65,7 +65,6 @@ public class Game extends JPanel implements ActionListener{
     }
 
     public void main(){
-        player = new Mario();
 
         scoreLabel.setFont(new Font(scoreLabel.getFont().getName(), Font.BOLD, 40));
         scoreLabel.setPreferredSize(new Dimension(1150,50));
@@ -275,6 +274,8 @@ public class Game extends JPanel implements ActionListener{
             remove(scoreLabel);
             goombas.clear();
             score=0;
+            player.setx(0);
+            player.sety(600);
             main();
         }
     }
