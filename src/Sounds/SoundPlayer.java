@@ -15,40 +15,6 @@ public class SoundPlayer {
     public static Clip stompjump;
     public static Clip gameOver;
 
-//
-//    static File JumpSound;
-//    static File Stomp;
-//    static File StompJump;
-//
-//
-//    public SoundPlayer(){
-//        //JumpSound = new File("C:\\Users\\Justin Kwan\\IdeaProjects\\Jump2\\src\\Sounds\\NSMBWiiSoundEffectsRip\\nsmbwiiJump.wav");
-//        try {
-//            JumpSound = new File(getClass().getResource("NSMBWiiSoundEffectsRip/nsmbwiiJump.wav").toURI());
-//            Stomp = new File(getClass().getResource("NSMBWiiSoundEffectsRip/nsmbwiiStomp1.wav").toURI());
-//            StompJump = new File(getClass().getResource("NSMBWiiSoundEffectsRip/nsmbwiiStomp2.wav").toURI());
-//        }catch(Exception e) { e.printStackTrace(); }
-//
-//    }
-//
-//    public static void playSound(int i){
-//
-//        File file = null;
-//
-//        if (i==0) file = JumpSound;
-//        if (i==1) file = Stomp;
-//        if (i==2) file = StompJump;
-//
-//        try{
-//            Clip clip = AudioSystem.getClip();
-//            clip.open(AudioSystem.getAudioInputStream(file));
-//            clip.start();
-//        }
-//        catch(Exception e){
-//            e.printStackTrace();
-//        }
-//    }
-
 
     public SoundPlayer(){
         Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();

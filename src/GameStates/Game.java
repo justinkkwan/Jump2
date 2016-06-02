@@ -78,7 +78,6 @@ public class Game extends JPanel implements ActionListener{
 //        setFocusable(true);
 //        setFocusTraversalKeysEnabled(false);
 
-        //unsure
         this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("W"), "upPressed");
         this.getActionMap().put("upPressed", new UpAction("up"));
         this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("A"), "leftPressed");
@@ -98,6 +97,16 @@ public class Game extends JPanel implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        tickPlayerX();
+        tickPlayerY();
+
+        tickEnemies();
+
+        gravity=(gravity+1)%4;
+        repaint();
+    }
+
+    private void tickPlayerX(){
         if(keys[1]){
             player.setdx(-1*dx);
             player.activePicture = player.pictureLeft;
@@ -119,8 +128,9 @@ public class Game extends JPanel implements ActionListener{
         }
         if(!keys[1]&&!keys[3]) player.setdx(0);
         player.incrementx();
+    }
 
-
+    private void tickPlayerY(){
         if(keys[0]&&!jumping){
             player.setdy(-12);
             jumping = true;
@@ -140,7 +150,9 @@ public class Game extends JPanel implements ActionListener{
             player.sety(600);
             player.setdy(0);
         }
+    }
 
+    public void tickEnemies(){
         for(Goomba gom: goombas){
             if(gom.state>0) {
                 gom.x += gom.dx;
@@ -154,28 +166,7 @@ public class Game extends JPanel implements ActionListener{
                     }
                 }
                 if (gom.x < 0 || gom.x > 1080) gom.dx = -gom.dx;
-                if ((gom.x - player.getx() < player.activePicture.getIconWidth()-5 && //goomba and mario can be within 4 pixels of each other on left of goomba
-                        player.getx() - gom.x < gom.getPicture().getIconWidth()-8) && //goomba and mario can be within 7 pixels of each other on right of goomba
-                        gom.y - player.gety() < player.activePicture.getIconHeight()) {
-                    if(player.getdy() > 0){
-                        gom.onHit();
-                        player.hitEnemy=true;
-                        player.setdy(-5);
-                        if(keys[0]){
-                            player.setdy(-12);
-                            sp.playSound(2);
-                        }
-                        else
-                            sp.playSound(1);
-                        player.incrementy();
-                        jumping=true;
-                        score+=200;
-                    }
-                    else if (gom.y - player.gety() < player.activePicture.getIconHeight() - gom.getPicture().getIconHeight()/2){
-                        // this allows players to hit a goomba diagonally and not be punished for it (within reason)
-                        gameOver();
-                    }
-                }
+                handlePlayerEnemyInteraction(gom);
 
                 if(gom.state==1&&gom.y<600){
                     gom.y+=4;
@@ -183,7 +174,7 @@ public class Game extends JPanel implements ActionListener{
                 }
             }
             else gom.count++;
-            if (gom.count>40){
+            if (gom.count>40){ // slight pause before removing goombas and also a window of time for player to be in enemy hitbox
                 removeList.add(gom);
                 player.hitEnemy=false;
             }
@@ -192,14 +183,34 @@ public class Game extends JPanel implements ActionListener{
             goombas.remove(gom);
         }
 
-
-
         if(goombas.size()<2){
             goombas.add(new Goomba(1079,600));
         }
+    }
 
-        gravity=(gravity+1)%4;
-        repaint();
+    public void handlePlayerEnemyInteraction(Goomba gom) {
+        if ((gom.x - player.getx() < player.activePicture.getIconWidth()-5 && //goomba and mario can be within 4 pixels of each other on left of goomba
+                player.getx() - gom.x < gom.getPicture().getIconWidth()-8) && //goomba and mario can be within 7 pixels of each other on right of goomba
+                gom.y - player.gety() < player.activePicture.getIconHeight()) {
+            if(player.getdy() > 0){
+                gom.onHit();
+                player.hitEnemy=true;
+                player.setdy(-5);
+                if(keys[0]){
+                    player.setdy(-12);
+                    sp.playSound(2);
+                }
+                else
+                    sp.playSound(1);
+                player.incrementy();
+                jumping=true;
+                score+=200;
+            }
+            else if (gom.y - player.gety() < player.activePicture.getIconHeight() - gom.getPicture().getIconHeight()/2){
+                // this allows players to hit a goomba diagonally and not be punished for it (within reason)
+                gameOver();
+            }
+        }
     }
 
     public void setCharacter(int character) {
@@ -276,6 +287,8 @@ public class Game extends JPanel implements ActionListener{
             score=0;
             player.setx(0);
             player.sety(600);
+            player.setdy(0);
+            jumping = false;
             main();
         }
     }
